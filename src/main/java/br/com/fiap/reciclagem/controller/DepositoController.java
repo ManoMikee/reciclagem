@@ -1,3 +1,4 @@
+
 package br.com.fiap.reciclagem.controller;
 
 import br.com.fiap.reciclagem.dto.DepositoDTO;
@@ -58,7 +59,7 @@ public class DepositoController {
                 pontoColeta
         );
 
-        Deposito salvo = depositoService.salvar(deposito);
+        Deposito salvo = depositoService.registrarDeposito(deposito);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -71,14 +72,15 @@ public class DepositoController {
             @PathVariable Long id,
             @Valid @RequestBody DepositoDTO dto) {
 
-        Deposito deposito = buscarEntidadePorId(id);
         PontoColeta pontoColeta = buscarPontoColeta(dto.getPontoColetaId());
 
-        deposito.setQuantidadeKg(dto.getQuantidadeKg());
-        deposito.setDataDeposito(dto.getDataDeposito());
-        deposito.setPontoColeta(pontoColeta);
+        Deposito novosDados = new Deposito(
+                dto.getQuantidadeKg(),
+                dto.getDataDeposito(),
+                pontoColeta
+        );
 
-        Deposito atualizado = depositoService.salvar(deposito);
+        Deposito atualizado = depositoService.atualizarDeposito(id, novosDados);
 
         return converterParaDTO(atualizado);
     }

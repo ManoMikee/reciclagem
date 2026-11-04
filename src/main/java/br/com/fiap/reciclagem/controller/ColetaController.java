@@ -59,7 +59,7 @@ public class ColetaController {
                 pontoColeta
         );
 
-        Coleta salva = coletaService.salvar(coleta);
+        Coleta salva = coletaService.registrarColeta(coleta);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)

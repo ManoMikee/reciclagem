@@ -1,3 +1,4 @@
+
 package br.com.fiap.reciclagem.exception;
 
 import org.springframework.http.HttpStatus;
@@ -36,14 +37,26 @@ public class GlobalExceptionHandler {
                 .body(resposta);
     }
 
-    // TRATAR REGISTROS NÃO ENCONTRADOS
+    // TRATAR REGISTROS NÃO ENCONTRADOS E OUTROS ERROS HTTP
     @ExceptionHandler(ResponseStatusException.class)
     public ResponseEntity<Map<String, Object>> tratarNaoEncontrado(
             ResponseStatusException ex) {
 
         Map<String, Object> resposta = new HashMap<>();
-        resposta.put("status", ex.getStatusCode().value());
-        resposta.put("erro", "Recurso não encontrado");
+        int status = ex.getStatusCode().value();
+
+        resposta.put("status", status);
+
+        if (status == 400) {
+            resposta.put("erro", "Requisição inválida");
+        } else if (status == 404) {
+            resposta.put("erro", "Recurso não encontrado");
+        } else if (status == 409) {
+            resposta.put("erro", "Conflito de dados");
+        } else {
+            resposta.put("erro", "Erro na requisição");
+        }
+
         resposta.put("mensagem", ex.getReason());
         resposta.put("dataHora", LocalDateTime.now());
 
